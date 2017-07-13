@@ -13,7 +13,7 @@ pipeline:
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
     commands:
-      - docker login -u="ukhomeofficedigital+openjdk8-openssl" -p=${DOCKER_PASSWORD} quay.io
+      - docker login -u="ukhomeofficedigital+openjdk8_openssl" -p=${DOCKER_PASSWORD} quay.io
       - docker tag openjdk8-openssl quay.io/ukhomeofficedigital/openjdk8-openssl:${DRONE_TAG}
       - docker tag openjdk8-openssl quay.io/ukhomeofficedigital/openjdk8-openssl:latest
       - docker push quay.io/ukhomeofficedigital/openjdk8-openssl:${DRONE_TAG}
