@@ -1,0 +1,30 @@
+pipeline:
+  build_docker_image:
+    image: docker:1.13
+    environment:
+      - DOCKER_HOST=tcp://127.0.0.1:2375
+    commands:
+      - docker build -t openjdk8-openssl .
+    when:
+      event: [push, tag]
+
+  image_to_quay:
+    image: docker:1.13
+    environment:
+      - DOCKER_HOST=tcp://127.0.0.1:2375
+    commands:
+      - docker login -u="ukhomeofficedigital+openjdk8-openssl" -p=${DOCKER_PASSWORD} quay.io
+      - docker tag openjdk8-openssl quay.io/ukhomeofficedigital/openjdk8-openssl:${DRONE_TAG}
+      - docker tag openjdk8-openssl quay.io/ukhomeofficedigital/openjdk8-openssl:latest
+      - docker push quay.io/ukhomeofficedigital/openjdk8-openssl:${DRONE_TAG}
+      - docker push quay.io/ukhomeofficedigital/openjdk8-openssl:latest
+    when:
+      event: tag
+
+services:
+  dind:
+    image: docker:1.13-dind
+    privileged: true
+    command:
+      - "-s"
+      - "overlay"
